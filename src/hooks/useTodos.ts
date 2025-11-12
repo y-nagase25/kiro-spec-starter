@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Todo } from '@/types/todo';
+import { TODO_ITEM_MAX } from '@/constants/todo';
 
 const STORAGE_KEY = 'todos';
 
@@ -31,10 +32,14 @@ export function useTodos() {
     }
   }, [todos]);
 
-  const addTodo = (title: string) => {
+  const addTodo = (title: string): string | null => {
     const trimmedTitle = title.trim();
     if (trimmedTitle.length === 0) {
-      return;
+      return null;
+    }
+
+    if (todos.length >= TODO_ITEM_MAX) {
+      return `タスクの最大数（${TODO_ITEM_MAX}件）を超過しています`;
     }
 
     const newTodo: Todo = {
@@ -45,6 +50,7 @@ export function useTodos() {
     };
 
     setTodos((prev) => [...prev, newTodo]);
+    return null;
   };
 
   const toggleTodo = (id: string) => {
