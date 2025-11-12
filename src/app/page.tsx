@@ -1,11 +1,10 @@
-import { TodoForm } from "@/components/TodoForm";
-import { useTodos } from "@/hooks/useTodos";
+import { TodoList } from "@/components/TodoList";
 
 export default function Home() {
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">TODO App</h1>
+    <main className="min-h-screen p-8 bg-background">
+      <div className="max-w-[800px] mx-auto">
+        <TodoList />
       </div>
     </main>
   );
