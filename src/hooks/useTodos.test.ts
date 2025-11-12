@@ -135,4 +135,48 @@ describe('useTodos', () => {
     expect(result.current.todos).toHaveLength(1);
     expect(result.current.todos[0].title).toBe('Stored Todo');
   });
+
+  it('should return error message when adding todo exceeds maximum limit', () => {
+    const { result } = renderHook(() => useTodos());
+
+    // Add 10 todos (the maximum)
+    for (let i = 0; i < 10; i++) {
+      act(() => {
+        result.current.addTodo(`Todo ${i + 1}`);
+      });
+    }
+
+    expect(result.current.todos).toHaveLength(10);
+
+    // Try to add 11th todo
+    let errorMessage: string | null = null;
+    act(() => {
+      errorMessage = result.current.addTodo('Todo 11');
+    });
+
+    expect(errorMessage).toBe('タスクの最大数（10件）を超過しています');
+    expect(result.current.todos).toHaveLength(10);
+  });
+
+  it('should not add todo when at maximum limit', () => {
+    const { result } = renderHook(() => useTodos());
+
+    // Add 10 todos (the maximum)
+    for (let i = 0; i < 10; i++) {
+      act(() => {
+        result.current.addTodo(`Todo ${i + 1}`);
+      });
+    }
+
+    expect(result.current.todos).toHaveLength(10);
+
+    // Try to add 11th todo
+    act(() => {
+      result.current.addTodo('Todo 11');
+    });
+
+    // Verify that the 11th todo was not added
+    expect(result.current.todos).toHaveLength(10);
+    expect(result.current.todos.every(todo => todo.title !== 'Todo 11')).toBe(true);
+  });
 });
